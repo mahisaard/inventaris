@@ -121,39 +121,35 @@ require 'cek.php';
                                                 <th>Deskripsi</th>
                                                 <th>Jumlah</th>
                                                 <th>Aksi</th>
-                                                <th>Aksi.2</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             $ambilsemuadatastock = mysqli_query($conn,"select * from stock");
                                             $i = 1;
-                                            while($data=mysqli_fetch_array($ambilsemuadatastock)){
+                                            while($data = mysqli_fetch_array($ambilsemuadatastock)){
                                                 $namabarang = $data['namabarang'];
                                                 $deskripsi = $data['deskripsi'];
                                                 $stock = $data['stock'];
                                                 $idbrg = $data['idbarang'];
                                             
                                             ?>
+
                                             <tr>
                                                 <td><?=$i++;?></td>
                                                 <td><?=$namabarang;?></td>
                                                 <td><?=$deskripsi;?></td>
                                                 <td><?=$stock;?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit<?=$idbrg;?>">
+                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#perbarui<?=$idbrg;?>">
                                                     Edit
                                                     </button>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete<?$idbrg;?>">
-                                                    Delete
-                                                    </button>
+
                                                 </td>
                                             </tr>
 
                                             <!-- Edit Modal -->
-                                            <div class="modal fade" id="edit<?=$idbrg;?>">
+                                            <div class="modal fade" id="perbarui<?=$idbrg;?>">
                                                 <div class="modal-dialog">
                                                 <div class="modal-content">
 
@@ -180,26 +176,25 @@ require 'cek.php';
                                             </div>
                                            
                                         
-                                             <!-- Edit Modal -->
-                                            <div class="modal fade" id="edit<?=$idbrg;?>">
+                                            <!-- Delete Modal -->
+                                            <div class="modal fade" id="delete<?=$idbrg;?>">
                                                 <div class="modal-dialog">
                                                 <div class="modal-content">
 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                    <h4 class="modal-title">Update Barang</h4>
+                                                    <h4 class="modal-title">Hapus Barang</h4>
                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
 
                                                     <!-- Modal body -->
                                                     <form method="post">
                                                     <div class="modal-body">
-                                                    <input type="text" name="namabarang" value="<?=$namabarang;?>" class="form-control" required>
+                                                    Apakah Anda yakin ingin menghapus <?=$namabarang;?>?
                                                     <br>
-                                                    <input type="text" name="deskripsi" value="<?=$deskripsi;?>" class="form-control" required>
                                                     <br>
                                                     <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
-                                                    <button type="submit" class="btn btn-danger" name="updatebarang">Submit</button>
+                                                    <button type="submit" class="btn btn-danger" name="hapusbarang">Hapus</button>
                                                     </div>
                                                     </form>
 
@@ -214,6 +209,12 @@ require 'cek.php';
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                            <div class="card-footer">
+                            <!-- Button to Open the Modal -->
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete<?=$idbrg;?>">
+                                Hapus Barang 
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -243,7 +244,7 @@ require 'cek.php';
         <script src="assets/demo/datatables-demo.js"></script>
     </body>
 
-            <!-- Modal -->
+            <!-- Tambah Modal -->
             <div class="modal fade" id="myModal">
             <div class="modal-dialog">
             <div class="modal-content">
