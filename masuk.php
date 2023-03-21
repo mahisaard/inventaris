@@ -80,6 +80,7 @@ require 'cek.php';
                                                 <th>Nama Barang</th>
                                                 <th>Jumlah</th>
                                                 <th>Penerima</th>
+                                                <th>Keterangan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -87,11 +88,13 @@ require 'cek.php';
                                         <?php
                                             $ambilsemuadatastock = mysqli_query($conn,"select * from masuk m, stock s where s.idbarang = m.idbarang");
                                             while($data=mysqli_fetch_array($ambilsemuadatastock)){
+                                                $idm = $data['idmasuk'];
                                                 $tanggal = $data['tanggal'];
                                                 $namabarang = $data['namabarang'];
                                                 $jumlah = $data['jumlah'];
                                                 $penerima = $data['penerima'];
                                                 $idbrg = $data['idbarang'];
+                                                $keterangan = $data['keterangan']
                                             
                                             ?>
                                             <tr>
@@ -99,20 +102,21 @@ require 'cek.php';
                                                 <td><?=$namabarang;?></td>
                                                 <td><?=$jumlah;?></td>
                                                 <td><?=$penerima;?></td>
+                                                <td><?=$keterangan?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit<?=$idbrg?>">
+                                                    <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#edit<?=$idbrg?>">
                                                     Edit
                                                     </button>
 
                                                     <input type="hidden" name="idbarangygmaudihapus" value="<?=$idbrg?>"> 
 
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete<?=$idbrg?>">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus<?=$idbrg?>">
                                                     Delete
                                                     </button>
                                                 </td>
                                             </tr>
 
-                                            <!-- The Modal -->
+                                            <!-- Edit Modal -->
                                             <div class="modal fade" id="edit<?=$idbrg;?>">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -126,16 +130,47 @@ require 'cek.php';
                                                 <!-- Modal body -->
                                                 <form method="post">
                                                 <div class="modal-body">
-                                                    <input type="text" name="namabarang" value="<?=$namabarang;?>" class="form-control" required>
+                                                    <input type="text" name="keterangan" value="<?=$keterangan;?>" class="form-control" required>
                                                     <br>
-                                                    <input type="text" name="deskripsi" value="<?=$deskripsi;?>" class="form-control" required>
+                                                    <input type="text" name="penerima" value="<?=$penerima;?>" class="form-control" required>
                                                     <br>
-                                                    <button type="submit" class="btn btn-primary" name="updatebarang">Submit</button>
+                                                    <input type="number" name="jumlah" value="<?=$jumlah;?>" class="form-control" required>
+                                                    <br>
+                                                    <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
+                                                    <input type="hidden" name="idm" value="<?=$idm;?>">
+                                                    <button type="submit" class="btn btn-primary" name="updatebarangmasuk">Submit</button>
                                                 </div>
                                                 </form>
 
                                                 </div>
                                             </div>
+                                            </div>
+
+                                             <!-- Delete Modal -->
+                                             <div class="modal fade" id="hapus<?=$idbrg;?>">
+                                                <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                    <h4 class="modal-title">Hapus Barang</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <form method="post">
+                                                    <div class="modal-body">
+                                                    Apakah Anda yakin ingin menghapus <?=$namabarang;?>?
+                                                    <br>
+                                                    <br>
+                                                    <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
+                                                    <input type="hidden" name="kty" value="<?=$jumlah;?>">
+                                                    <button type="submit" class="btn btn-danger" name="hapusbarangmasuk">Hapus</button>
+                                                    </div>
+                                                    </form>
+
+                                                </div>
+                                                </div>
                                             </div>
 
                                             <?php
@@ -210,6 +245,8 @@ require 'cek.php';
         <input type="number" name="jumlah" placeholder="Jumlah Barang" class="form-control" required>
         <br>
         <input type="text" name="penerima" placeholder="Penerima Barang" class="form-control" required>
+        <br>
+        <input type="text" name="keterangan" placeholder="Keterangan Barang" class="form-control" required>
         <br>
         <button type="submit" class="btn btn-primary" name="barangmasuk">Submit</button>
       </div>

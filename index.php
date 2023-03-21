@@ -22,7 +22,7 @@ require 'cek.php';
            
             <ul class="navbar-nav ml-auto ml-md-0">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <a class="nav-link dropdown-toggle" id="userDropdlown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>
@@ -141,8 +141,11 @@ require 'cek.php';
                                                 <td><?=$deskripsi;?></td>
                                                 <td><?=$stock;?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#perbarui<?=$idbrg;?>">
+                                                    <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#perbarui<?=$idbrg;?>">
                                                     Edit
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus<?=$idbrg;?>">
+                                                    Hapus
                                                     </button>
 
                                                 </td>
@@ -174,10 +177,9 @@ require 'cek.php';
                                                 </div>
                                                 </div>
                                             </div>
-                                           
-                                        
+
                                             <!-- Delete Modal -->
-                                            <div class="modal fade" id="delete<?=$idbrg;?>">
+                                            <div class="modal fade" id="hapus<?=$idbrg;?>">
                                                 <div class="modal-dialog">
                                                 <div class="modal-content">
 
@@ -201,6 +203,19 @@ require 'cek.php';
                                                 </div>
                                                 </div>
                                             </div>
+                                           
+
+                                                <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+                                                <script
+                                                src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+                                                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                                                crossorigin="anonymous"
+                                                ></script>
+                                                <script
+                                                src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+                                                integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+                                                crossorigin="anonymous"
+                                                ></script>
 
                                             <?php
                                             };
@@ -212,9 +227,7 @@ require 'cek.php';
                             </div>
                             <div class="card-footer">
                             <!-- Button to Open the Modal -->
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete<?=$idbrg;?>">
-                                Hapus Barang 
-                                </button>
+                                
                             </div>
                         </div>
                     </div>
