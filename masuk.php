@@ -109,50 +109,45 @@ require 'cek.php';
                                                 <td><?= $penerima; ?></td>
                                                 <td><?= $keterangan ?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#edit<?= $idbrg ?>">
+                                                    <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#edit<?=$idbrg;?>">
                                                         Edit
                                                     </button>
 
-                                                    <input type="hidden" name="idbarangygmaudihapus" value="<?= $idbrg ?>">
+                                                    <input type="hidden" name="idbarangygmaudihapus" value="<?=$idbrg;?>">
 
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus<?= $idbrg ?>">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus<?=$idbrg;?>">
                                                         Delete
                                                     </button>
                                                 </td>
                                             </tr>
                                             <!-- Edit Modal -->
-                                            <div class="modal fade" id="edit<?= $idbrg; ?>">
+                                            <div class="modal fade" id="edit<?=$idbrg;?>">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Update Barang Masuk</h4>
                                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                         </div>
-                                                        <form method="post">
+                                                        <form method="post" action="masuk.php">
                                                             <div class="modal-body">
-                                                                <input type="text" name="keterangan" value="<?= $keterangan; ?>" class="form-control" required>
+                                                                <input type="text" name="keterangan" value="<?=$keterangan;?>" class="form-control" required>
                                                                 <br>
-                                                                <input type="text" name="penerima" value="<?= $penerima; ?>" class="form-control" required>
+                                                                <input type="text" name="penerima" value="<?=$penerima;?>" class="form-control" required>
                                                                 <br>
-                                                                <input type="number" name="jumlah" value="<?= $jumlah; ?>" class="form-control" required>
+                                                                <input type="number" name="jumlah" value="<?=$jumlah;?>" class="form-control" required>
                                                                 <br>
-                                                                <input type="hidden" name="idbrg" value="<?= $idbrg; ?>">
+                                                                <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
+                                                                <input type="hidden" name="idm" value="<?=$idm;?>">
                                                                 <button type="submit" class="btn btn-primary" name="updatebarangmasuk">Submit</button>
                                                             </div>
                                                         </form>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        <?php } ?>
+                                            </div>  
+                                       
 
-                                        <!-- Delete Modal -->
-                                        <?php
-                                        $ambilsemuadatastock = mysqli_query($conn, "SELECT * FROM masuk m, stock s WHERE s.idbarang = m.idbarang");
-                                        while ($data = mysqli_fetch_array($ambilsemuadatastock)) {
-                                            $idbrg = $data['idbarang'];
-                                            $namabarang = $data['namabarang'];
-                                        ?>
-                                            <div class="modal fade" id="hapus<?= $idbrg; ?>">
+                                            <!-- Delete Modal -->
+                                            <div class="modal fade" id="hapus<?=$idbrg;?>">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -161,11 +156,12 @@ require 'cek.php';
                                                         </div>
                                                         <form method="post">
                                                             <div class="modal-body">
-                                                                Apakah Anda yakin ingin menghapus <?= $namabarang; ?>?
+                                                                Apakah Anda yakin ingin menghapus <?=$namabarang;?>?
                                                                 <br>
                                                                 <br>
-                                                                <input type="hidden" name="idbrg" value="<?= $idbrg; ?>">
-                                                                <input type="hidden" name="kty" value="<?= $jumlah; ?>">
+                                                                <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
+                                                                <input type="hidden" name="jumlah" value="<?=$jumlah;?>">
+                                                                <input type="hidden" name="idm" value="<?=$idm;?>">
                                                                 <button type="submit" class="btn btn-danger" name="hapusbarangmasuk">Hapus</button>
                                                             </div>
                                                         </form>
@@ -240,12 +236,13 @@ require 'cek.php';
                     </select>
 
                     <br>
-                    <input type="number" name="jumlah" placeholder="Jumlah Barang" class="form-control" required>
+                    <input type="number" min="0" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" name="jumlah" placeholder="Jumlah Barang" class="form-control" required> 
                     <br>
                     <input type="text" name="penerima" placeholder="Penerima Barang" class="form-control" required>
                     <br>
                     <input type="text" name="keterangan" placeholder="Keterangan" class="form-control" required>
                     <br>
+
                     <button type="submit" class="btn btn-primary" name="addbarangmasuk">Submit</button>
                 </form>
             </div>
@@ -254,6 +251,7 @@ require 'cek.php';
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
+           
 
         </div>
     </div>
