@@ -10,24 +10,10 @@ require 'cek.php';
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Dashboard</title>
+        <title>Kelola Admin</title>
         <link href="css/styles.css" rel="stylesheet" />
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
-        <style>
-            .zoomable{
-                width: 100px;
-            }
-            .zoomable:hover{
-                transform: scale(2);
-                transition: 0.5s ease;
-            }
-
-            a{
-                text-decoration: none;
-                color: black;
-            }
-        </style>
     </head>
 
     <body class="sb-nav-fixed">
@@ -89,60 +75,11 @@ require 'cek.php';
                     <div class="container-fluid">
                         <h1 class="mt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active"></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
                        <!-- Tambahkan card untuk total barang -->
                        <div class="row">
                        <div class="container">
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">
-                                        Total Barang
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <div class="small text-white"><?= getTotalBarang(); ?></div>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">
-                                        Total Barang Masuk
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <div class="small text-white"><?= getTotalBarangMasuk(); ?></div>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">
-                                        Total Peminjaman
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <div class="small text-white"><?= getTotalPeminjaman(); ?></div>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-info text-white mb-4">
-                                    <div class="card-body">
-                                        Total Barang Peminjaman
-                                    </div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <div class="small text-white"><?= getTotalBarangPeminjaman(); ?></div>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                         </div>
@@ -150,74 +87,37 @@ require 'cek.php';
                             <div class="card-header">
                             <!-- Button to Open the Modal -->
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                                Tambah Barang 
+                                Tambah Admin
                                 </button>
-                                <a href="export.php" class="btn btn-info">Export Data</a>
                             </div>
                             <div class="card-body">
-
-                            <?php 
-                            $ambildatastock = mysqli_query($conn,"select * from stock where stock < 1");
-
-                                while($fetch=mysqli_fetch_array($ambildatastock)){
-                                    $barang = $fetch['namabarang'];
-  
-                            ?>
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Mohon diperhatikan!</strong> Stock <?=$barang;?> sudah habis.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                            <?php 
-                                }
-                            ?>
-
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Gambar</th>
-                                                <th>Nama Barang</th>
-                                                <th>Deskripsi</th>
-                                                <th>Jumlah</th>
+                                                <th>Username Admin</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $ambilsemuadatastock = mysqli_query($conn,"select * from stock");
+                                            $ambilsemuadataadmin = mysqli_query($conn,"select * from login");
                                             $i = 1;
-                                            while($data = mysqli_fetch_array($ambilsemuadatastock)){
-                                                $namabarang = $data['namabarang'];
-                                                $deskripsi = $data['deskripsi'];
-                                                $stock = $data['stock'];
-                                                $idbrg = $data['idbarang'];
-
-                                                //cek apakah ada gambar
-                                                $gambar = $data['image']; //ambil gambar
-                                                if($gambar==null){
-                                                    //jika tidak ada gambar
-                                                    $img = 'No Photo';
-                                                } else {
-                                                    //jika ada gambar
-                                                    $img = '<img src="images/'.$gambar.'" class="zoomable">';
-                                                }
-                                            
+                                            while($data = mysqli_fetch_array($ambilsemuadataadmin)){
+                                                $uname = $data['username'];
+                                                $iduser = $data['iduser'];
+                                                $pw = $data['password'];
                                             ?>
 
                                             <tr>
                                                 <td><?=$i++;?></td>
-                                                <td><?=$img;?></td>
-                                                <td><a href="detail.php?id=<?=$idbrg;?>" style="font-style: italic;"><?=$namabarang;?></a></td>
-                                                <td><?=$deskripsi;?></td>
-                                                <td><?=$stock;?></td>
+                                                <td><?=$uname;?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#perbarui<?=$idbrg;?>">
+                                                    <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#perbarui<?=$iduser;?>">
                                                     Edit
                                                     </button>
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus<?=$idbrg;?>">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapus<?=$iduser;?>">
                                                     Hapus
                                                     </button>
 
@@ -225,27 +125,25 @@ require 'cek.php';
                                             </tr>
 
                                             <!-- Edit Modal -->
-                                            <div class="modal fade" id="perbarui<?=$idbrg;?>">
+                                            <div class="modal fade" id="perbarui<?=$iduser;?>">
                                                 <div class="modal-dialog">
                                                 <div class="modal-content">
 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                    <h4 class="modal-title">Update Barang</h4>
+                                                    <h4 class="modal-title">Edit Admin</h4>
                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
 
                                                     <!-- Modal body -->
-                                                    <form method="post" enctype="multipart/form-data">
+                                                    <form method="post">
                                                     <div class="modal-body">
-                                                    <input type="text" name="namabarang" value="<?=$namabarang;?>" class="form-control" required>
+                                                    <input type="text" name="usernameadmin" value="<?=$uname;?>" class="form-control" placeholder="Email" required>
                                                     <br>
-                                                    <input type="text" name="deskripsi" value="<?=$deskripsi;?>" class="form-control" required>
+                                                    <input type="password" name="passwordadmin" value="<?=$pw;?>" class="form-control" placeholder="Password">
                                                     <br>
-                                                    <input type="file" name="file" class="form-control">
-                                                    <br>
-                                                    <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
-                                                    <button type="submit" class="btn btn-primary" name="updatebarang">Submit</button>
+                                                    <input type="hidden" name="id" value="<?=$iduser;?>">
+                                                    <button type="submit" class="btn btn-primary" name="updateadmin">Submit</button>
                                                     </div>
                                                     </form>
 
@@ -254,24 +152,24 @@ require 'cek.php';
                                             </div>
 
                                             <!-- Delete Modal -->
-                                            <div class="modal fade" id="hapus<?=$idbrg;?>">
+                                            <div class="modal fade" id="hapus<?=$iduser;?>">
                                                 <div class="modal-dialog">
                                                 <div class="modal-content">
 
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
-                                                    <h4 class="modal-title">Hapus Barang</h4>
+                                                    <h4 class="modal-title">Hapus Admin</h4>
                                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
 
                                                     <!-- Modal body -->
                                                     <form method="post">
                                                     <div class="modal-body">
-                                                    Apakah Anda yakin ingin menghapus <?=$namabarang;?>?
+                                                    Apakah Anda yakin ingin menghapus <?=$uname;?>?
                                                     <br>
                                                     <br>
-                                                    <input type="hidden" name="idbrg" value="<?=$idbrg;?>">
-                                                    <button type="submit" class="btn btn-danger" name="hapusbarang">Hapus</button>
+                                                    <input type="hidden" name="id" value="<?=$iduser;?>">
+                                                    <button type="submit" class="btn btn-danger" name="hapusadmin">Hapus</button>
                                                     </div>
                                                     </form>
 
@@ -339,22 +237,18 @@ require 'cek.php';
 
             <!-- Modal Header -->
             <div class="modal-header">
-            <h4 class="modal-title">Tambah Barang</h4>
+            <h4 class="modal-title">Tambah Admin</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <!-- Modal body -->
-            <form method="post" enctype="multipart/form-data">
+            <form method="post">
             <div class="modal-body">
-            <input type="text" name="namabarang" placeholder="Nama Barang" class="form-control" required>
+            <input type="text" name="username" placeholder="Username" class="form-control" required>
             <br>
-            <input type="text" name="deskripsi" placeholder="Deskripsi Barang" class="form-control" required>
+            <input type="password" name="password" placeholder="Password" class="form-control" required>
             <br>
-            <input type="number" name="stock" placeholder="Jumlah Barang" class="form-control" required>
-            <br>
-            <input type="file" name="file" class="form-control">
-            <br>
-            <button type="submit" class="btn btn-primary" name="addnewbarang">Submit</button>
+            <button type="submit" class="btn btn-primary" name="addadmin">Submit</button>
             </div>
             </form>
 

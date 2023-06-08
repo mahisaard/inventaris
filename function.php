@@ -50,13 +50,50 @@ if(isset($_POST['addnewbarang'])){
     $deskripsi = $_POST['deskripsi'];
     $stock = $_POST['stock'];
 
-    $addtotable = mysqli_query($conn,"insert into stock (namabarang, deskripsi, stock) values('$namabarang','$deskripsi','$stock')");
-    if($addtotable){
-        header('location:index.php');
+    //bagian gambar
+    $allowed_extension = array('png','jpg');
+    $nama = $_FILES['file']['name']; //mengambil nama file gambar
+    $dot = explode('.',$nama);
+    $ekstensi = strtolower(end($dot)); //mengambil ekstensinya
+    $ukuran = $_FILES['file']['size']; //mengambil size filenya
+    $file_tmp = $_FILES['file']['tmp_name']; //mengambil lokasi filenya
+
+    //penamaan file -> enkripsi
+    $image = md5(uniqid($nama,true) . time()).'.'.$ekstensi; //menggabungkan nama file yg dienkripsi dgn ekstensinya
+
+    //proses upload gambar
+    if(in_array($ekstensi, $allowed_extension) === true){
+        //validasi ukuran filenya
+        if($ukuran < 15000000){
+            move_uploaded_file($file_tmp, 'images/'.$image);
+
+            $addtotable = mysqli_query($conn,"insert into stock (namabarang, deskripsi, stock, image) values('$namabarang','$deskripsi','$stock','$image')");
+            if($addtotable){
+                header('location:index.php');
+            } else {
+                echo 'Gagal';
+                header('location:index.php');
+            }
+        } else {
+            //file lebih dari 1.5 MB
+            echo '
+            <script>
+                alert("Ukuran terlalu besar");
+                window.locatio.href="index.php";
+            </script>
+            ';
+        }
     } else {
-        echo 'Gagal';
-        header('location:index.php');
+        //jika filenya tidak jpg/png
+        echo '
+            <script>
+                alert("File harus png/jpg");
+                window.locatio.href="index.php";
+            </script>
+            ';
     }
+
+    
 };
 
 //Menambah barang masuk
@@ -109,19 +146,48 @@ if(isset($_POST['updatebarang'])){
     $idbrg = $_POST['idbrg'];
     $namabarang = $_POST['namabarang'];
     $deskripsi = $_POST['deskripsi'];
+    
+    //bagian gambar
+    $allowed_extension = array('png','jpg');
+    $nama = $_FILES['file']['name']; //mengambil nama file gambar
+    $dot = explode('.',$nama);
+    $ekstensi = strtolower(end($dot)); //mengambil ekstensinya
+    $ukuran = $_FILES['file']['size']; //mengambil size filenya
+    $file_tmp = $_FILES['file']['tmp_name']; //mengambil lokasi filenya
+ 
+    //penamaan file -> enkripsi
+    $image = md5(uniqid($nama,true) . time()).'.'.$ekstensi; //menggabungkan nama file yg dienkripsi dgn ekstensinya
 
-    $update = mysqli_query($conn,"update stock set namabarang='$namabarang', deskripsi='$deskripsi' where idbarang ='$idbrg'");
-    if($update){
-        header('location:index.php');
+    if($ukuran==0){
+        //jika tdk ingin upload
+        $update = mysqli_query($conn,"update stock set namabarang='$namabarang', deskripsi='$deskripsi' where idbarang ='$idbrg'");
+        if($update){
+            header('location:index.php');
+        } else {
+            echo 'Gagal';
+            header('location:index.php');
+    }
     } else {
-        echo 'Gagal';
-        header('location:index.php');
+        //jika ingin
+        move_uploaded_file($file_tmp, 'images/'.$image);
+        $update = mysqli_query($conn,"update stock set namabarang='$namabarang', deskripsi='$deskripsi', image='$image' where idbarang ='$idbrg'");
+        if($update){
+            header('location:index.php');
+        } else {
+            echo 'Gagal';
+            header('location:index.php');
+    }
     }
 }
 
 //Menghapus Item Dashboard
 if(isset($_POST['hapusbarang'])){
     $idbrg = $_POST['idbrg'];
+
+    $gambar = mysqli_query($conn,"select * from stock where idbarang='$idbrg'");
+    $get = mysqli_fetch_array($gambar);
+    $img = 'images/'.$get['image'];
+    unlink($img);
 
     $hapus = mysqli_query($conn,"delete from stock where idbarang ='$idbrg'");
     if($delete){
@@ -206,41 +272,144 @@ if (isset($_POST['hapusbarangmasuk'])) {
 //Menambah Data Peminjaman
 if(isset($_POST['pinjam'])){
     $idbarang = $_POST['barangnya'];
-    $idp = $_POST['idp'];
-    $status = $_POST['status'];
+    $idp = $_POST['idpeminjaman'];
     $jumlah = $_POST['jumlah'];
-    $penerima = $_POST['penerima'];
+    $peminjam = $_POST['peminjam'];
+    $penanggung_jawab = $_POST['penanggung_jawab'];
+    $nohp = $_POST['no_telepon'];
 
-    $lihatstock = mysqli_query($conn, "select * from stock where idbarang ='$idbrg'");
-    $stocknya = mysqli_fetch_array($lihatstock);
-    $stocksekarang = $stocknya['stock'];
+    //ambil stock sekarang
+    $stok_terkini = mysqli_query($conn,"select * from stock where idbarang='$idbarang'");
+    $stok_nya = mysqli_fetch_array($stok_terkini);
+    $stok = $stok_nya['stock'];
 
-    $jumlahPskrg = mysqli_query($conn, "select * from peminjaman where idpeminjaman ='$idp'");
-    $jumlahnya = mysqli_fetch_array($jumlahPskrg);
-    $jumlahPskrg = $jumlahnya['jumlah'];
+    //mengurangi stock
+    $new_stock = $stok-$jumlah;
 
-    if($jumlah > $jumlahskrg){
-        $selisih = $jumlah - $jumlahskrg;
-        $kurangi = $stocksekarang - $selisih;
-        $kurangistocknya = mysqli_query($conn, "update stock set stock = '$kurangi' where idbarang = '$idbrg'");
-        $updatenya = mysqli_query($conn, "update peminjaman set jumlah = 'jumlah', keterangan='$keterangan' where idpeminjaman = '$idp'");
-            if($kurangistocknya&&$updatenya){
-                header('location:peminjaman.php');
-            } else {
-                echo 'Gagal';
-                header('location:peminjaman.php');
-            }
-    }else {
-        $selisih = $jumlahskrg - $jumlah;
-        $kurangi = $stocksekarang + $selisih;
-        $kurangistocknya = mysqli_query($conn, "update stock set stock = '$kurangi' where idbarang = '$idbrg'");
-        $updatenya = mysqli_query($conn, "update peminjaman set jumlah = 'jumlah', keterangan='$keterangan' where idpeminjaman = '$idm'");
-            if($kurangistocknya&&$updatenya){
-                header('location:peminjaman.php');
-            } else {
-                echo 'Gagal';
-                header('location:peminjaman.php');
-            }
+    //mulai query database
+    $insertpinjam = mysqli_query($conn, "INSERT INTO peminjaman (idbarang,jumlah,peminjam,no_telepon,penanggung_jawab) 
+    values('$idbarang','$jumlah','$peminjam','$nohp','$penanggung_jawab')");
+
+    //mengurangi stock ditable dashboard
+    $kurangistock = mysqli_query($conn, "update stock set stock='$new_stock' where idbarang='$idbarang'");
+
+    if($insertpinjam&&$kurangistock){
+        //jika berhasil
+        echo '
+            <script>
+                alert("Berhasil");
+                window.locatio.href="peminjaman.php";
+            </script>
+            ';
+    } else {
+        //jika gagal
+        echo '
+            <script>
+                alert("Gagal");
+                window.locatio.href="peminjaman.php";
+            </script>
+            ';
     }
 }
+
+// Menyelesaikan Peminjaman
+if(isset($_POST['barangkembali'])){
+    $idpeminjaman = $_POST['idpeminjaman'];
+    $idbarang = $_POST['idbarang'];
+
+    // Eksekusi
+    $update_status = mysqli_query($conn, "UPDATE peminjaman SET status='Kembali' WHERE idpeminjaman='$idpeminjaman'");
+
+    if($update_status){
+        // Ambil data jumlah dari id peminjaman
+        $stok_peminjaman = mysqli_query($conn, "SELECT * FROM peminjaman WHERE idpeminjaman='$idpeminjaman'");
+        $stok_peminjamannya = mysqli_fetch_array($stok_peminjaman);
+        $jumlah_peminjaman = $stok_peminjamannya['jumlah'];
+
+        // Ambil stock sekarang
+        $stok_saat_ini = mysqli_query($conn, "SELECT * FROM stock WHERE idbarang='$idbarang'");
+        $stok_nya = mysqli_fetch_array($stok_saat_ini);
+        $stok = $stok_nya['stock'];
+
+        // Mengembalikan stock
+        $new_stock = $stok + $jumlah_peminjaman;
+
+        // Update stock
+        $kembalikan_stock = mysqli_query($conn, "UPDATE stock SET stock='$new_stock' WHERE idbarang='$idbarang'");
+
+        if($kembalikan_stock){
+            // Jika berhasil
+            echo '
+                <script>
+                    alert("Berhasil");
+                    window.location.href="peminjaman.php";
+                </script>
+                ';
+        } else {
+            // Jika gagal mengembalikan stock
+            echo '
+                <script>
+                    alert("Gagal mengembalikan stock");
+                    window.location.href="peminjaman.php";
+                </script>
+                ';
+        }
+    } else {
+        // Jika gagal mengupdate status peminjaman
+        echo '
+            <script>
+                alert("Gagal mengupdate status peminjaman");
+                window.location.href="peminjaman.php";
+            </script>
+            ';
+    }
+}
+
+
+
+//Tambah Admin Baru
+if(isset($_POST['addadmin'])){
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $queryinsert = mysqli_query($conn,"insert into login (username, password) values ('$username','$password')");
+
+    if($queryinsert){
+        //if berhasil
+        header('location:admin.php');
+    } else {
+        //jika gagal insert ke database
+        header('location:admin.php');
+    }
+}
+
+//Edit Data Admin
+if(isset($_POST['updateadmin'])){
+    $usernamebaru = $_POST['usernameadmin'];
+    $passwordbaru = $_POST['passwordadmin'];
+    $idnya = $_POST['id'];
+
+    $queryupdate = mysqli_query($conn,"update login set username='$usernamebaru', password='$passwordbaru' where iduser='$idnya'");
+
+    if($queryupdate){
+        header('location:admin.php');
+    } else {
+        header('location:admin.php');
+    }
+}
+
+//Hapus Data Admin
+if(isset($_POST['hapusadmin'])){
+    $id = $_POST['id'];
+
+    $querydelete = mysqli_query($conn, "DELETE FROM login WHERE iduser='$id'");
+
+    if($querydelete){
+        header('location:admin.php');
+    } else {
+        header('location:admin.php');
+    }
+}
+
+//Meminjam Barang
 ?>

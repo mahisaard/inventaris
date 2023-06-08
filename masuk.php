@@ -16,6 +16,15 @@ require 'cek.php';
     <link href="css/styles.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
+    <style>
+            .zoomable{
+                width: 100px;
+            }
+            .zoomable:hover{
+                transform: scale(2);
+                transition: 0.5s ease;
+            }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -25,7 +34,7 @@ require 'cek.php';
                 <img src="assets/img/Logo_SCR.png" alt="Logo" width="50" height="50">
                     <div style="margin-left: 10px; text-align: center;">
                         <span style="font-size: 20px; display: block;">Inventaris</span>
-                        <span style="font-size: 10px; display: block;">Lab SCR</span>
+                        <span style="font-size: 12px; display: block;">Lab SCR</span>
                     </div>
             </div>
         </a>
@@ -57,6 +66,10 @@ require 'cek.php';
                         <div class="sb-nav-link-icon"><i class="fas fa-calendar-check"></i></div>
                         Data Peminjaman
                     </a>
+                    <a class="nav-link" href="admin.php">
+                        <div class="sb-nav-link-icon"><i class="fas fa-user-cog"></i></div>
+                        Kelola Admin
+                    </a>
                 </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -76,6 +89,17 @@ require 'cek.php';
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                                 Tambah Barang Masuk
                             </button>
+                            <br>
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <form method="post" class="form-inline">
+                                        <input type="date" name="tgl_mulai" class="form-control">
+                                        <input type="date" name="tgl_selesai" class="form-control ml-3">
+                                        <br>
+                                        <button type="submit" name="filter_tgl" class="btn btn-info ml-3">filter</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -83,6 +107,7 @@ require 'cek.php';
                                     <thead>
                                         <tr>
                                             <th>Tanggal</th>
+                                            <th>Gambar</th>
                                             <th>Nama Barang</th>
                                             <th>Jumlah</th>
                                             <th>Penerima</th>
@@ -92,7 +117,22 @@ require 'cek.php';
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $ambilsemuadatastock = mysqli_query($conn, "SELECT * FROM masuk m, stock s WHERE s.idbarang = m.idbarang");
+
+                                        if(isset($_POST['filter_tgl'])){
+                                            $mulai = $_POST['tgl_mulai'];
+                                            $selesai = $_POST['tgl_selesai'];
+
+                                            if($mulai!=null || $selesai!=null){
+                                                $ambilsemuadatastock = mysqli_query($conn, "SELECT * FROM masuk m, stock s WHERE s.idbarang = m.idbarang and tanggal BETWEEN '$mulai' and DATE_ADD('$selesai',INTERVAL 1 DAY)");
+                                            } else {
+                                                $ambilsemuadatastock = mysqli_query($conn, "SELECT * FROM masuk m, stock s WHERE s.idbarang = m.idbarang");
+                                            }
+                                            
+                                        } else {
+                                            $ambilsemuadatastock = mysqli_query($conn, "SELECT * FROM masuk m, stock s WHERE s.idbarang = m.idbarang");
+                                        }
+
+                                        
                                         while ($data = mysqli_fetch_array($ambilsemuadatastock)) {
                                             $idm = $data['idmasuk'];
                                             $tanggal = $data['tanggal'];
@@ -101,9 +141,20 @@ require 'cek.php';
                                             $penerima = $data['penerima'];
                                             $idbrg = $data['idbarang'];
                                             $keterangan = $data['keterangan'];
+                                            
+                                            //cek apakah ada gambar
+                                            $gambar = $data['image']; //ambil gambar
+                                            if($gambar==null){
+                                                //jika tidak ada gambar
+                                                $img = 'No Photo';
+                                            } else {
+                                                //jika ada gambar
+                                                $img = '<img src="images/'.$gambar.'" class="zoomable">';
+                                            }
                                         ?>
                                             <tr>
                                                 <td><?= $tanggal; ?></td>
+                                                <td><?= $img; ?></td>
                                                 <td><?= $namabarang; ?></td>
                                                 <td><?= $jumlah; ?></td>
                                                 <td><?= $penerima; ?></td>
