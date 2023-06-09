@@ -1,19 +1,19 @@
 <?php
 require 'function.php';
 
-$background_image = 'assets/img/Dashboard.png'; 
+$background_image = 'assets/img/bg_fluid.jpg';
 
-//cek login, apakah terdaftar
-if(isset($_POST['login'])){
+// cek login, apakah terdaftar
+if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    //disamakan dengan database
+    // disamakan dengan database
     $cekdatabase = mysqli_query($conn, "SELECT * FROM login where username='$username' and '$password'");
-    //hitung jumlah data
+    // hitung jumlah data
     $hitung = mysqli_num_rows($cekdatabase);
 
-    if($hitung>0){
+    if ($hitung > 0) {
         $_SESSION['log'] = 'True';
         header('location:index.php');
     } else {
@@ -21,12 +21,11 @@ if(isset($_POST['login'])){
     };
 };
 
-if(!isset($_SESSION['log'])){
+if (!isset($_SESSION['log'])) {
 
 } else {
     header('location:index.php');
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -39,9 +38,18 @@ if(!isset($_SESSION['log'])){
         <meta name="author" content="" />
         <title>Form Login Admin</title>
         <link href="css/styles.css" rel="stylesheet" />
+        <style>
+            body {
+                background: url('<?php echo $background_image; ?>');
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+        </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
     </head>
-    <body class="bg-primary" style="background-image: url('<?php echo $background_image; ?>');">
+    <body>
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>
@@ -61,7 +69,7 @@ if(!isset($_SESSION['log'])){
                                                 <input class="form-control py-4" name="password" id="inputPassword" type="password" placeholder="Enter password" />
                                             </div>
                                             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <button class="btn btn-primary" href="index.html" name="login" >Login</a>
+                                                <button class="btn btn-primary" href="index.html" name="login">Login</a>
                                             </div>
                                         </form>
                                     </div>

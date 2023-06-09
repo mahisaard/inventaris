@@ -73,10 +73,7 @@ require 'cek.php';
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid">
-                        <h1 class="mt-4">Dashboard</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
-                        </ol>
+                        <h1 class="mt-4">Data Admin</h1>
                        <!-- Tambahkan card untuk total barang -->
                        <div class="row">
                        <div class="container">

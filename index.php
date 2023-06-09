@@ -23,10 +23,7 @@ require 'cek.php';
                 transition: 0.5s ease;
             }
 
-            a{
-                text-decoration: none;
-                color: black;
-            }
+ 
         </style>
     </head>
 
@@ -74,7 +71,6 @@ require 'cek.php';
                             Kelola Admin
                         </a>
                     </div>
-
                     </div>
                     <div class="sb-sidenav-footer">
                     <a class="nav-link" href="logout.php">
