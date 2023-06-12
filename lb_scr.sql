@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 02 Mar 2023 pada 18.08
+-- Waktu pembuatan: 09 Jun 2023 pada 09.27
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.2
 
@@ -35,13 +35,6 @@ CREATE TABLE `keluar` (
   `penerima` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `keluar`
---
-
-INSERT INTO `keluar` (`idkeluar`, `idbarang`, `jumlah`, `tanggal`, `penerima`) VALUES
-(1, 1, 1, '2023-03-02 02:49:04', 'udin');
-
 -- --------------------------------------------------------
 
 --
@@ -59,7 +52,8 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`iduser`, `username`, `password`) VALUES
-(1, 'tes', '123');
+(1, 'admin', '123'),
+(4, 'Bambang', '123');
 
 -- --------------------------------------------------------
 
@@ -72,6 +66,7 @@ CREATE TABLE `masuk` (
   `idbarang` int(11) NOT NULL,
   `jumlah` int(11) NOT NULL,
   `tanggal` timestamp NOT NULL DEFAULT current_timestamp(),
+  `keterangan` varchar(35) NOT NULL,
   `penerima` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -79,12 +74,38 @@ CREATE TABLE `masuk` (
 -- Dumping data untuk tabel `masuk`
 --
 
-INSERT INTO `masuk` (`idmasuk`, `idbarang`, `jumlah`, `tanggal`, `penerima`) VALUES
-(1, 1, 1, '2023-03-02 02:13:32', 'udin'),
-(2, 1, 2, '2023-03-02 02:13:45', 'udin'),
-(3, 1, 4, '2023-03-02 02:16:36', 'udin'),
-(4, 1, 5, '2023-03-02 02:16:52', 'udin'),
-(5, 1, 3, '2023-03-02 02:29:43', 'udin');
+INSERT INTO `masuk` (`idmasuk`, `idbarang`, `jumlah`, `tanggal`, `keterangan`, `penerima`) VALUES
+(2, 7, 200, '2023-06-05 01:53:29', 'baru', 'bambang'),
+(3, 3, 500, '2023-06-05 02:02:37', 'baru', 'udin');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `peminjaman`
+--
+
+CREATE TABLE `peminjaman` (
+  `idbarang` int(11) NOT NULL,
+  `idpeminjaman` int(11) NOT NULL,
+  `tanggal` timestamp NOT NULL DEFAULT current_timestamp(),
+  `jumlah` int(11) NOT NULL,
+  `penanggung_jawab` varchar(35) NOT NULL,
+  `peminjam` varchar(35) NOT NULL,
+  `no_telepon` varchar(15) NOT NULL,
+  `status` varchar(35) NOT NULL DEFAULT 'Dipinjam'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `peminjaman`
+--
+
+INSERT INTO `peminjaman` (`idbarang`, `idpeminjaman`, `tanggal`, `jumlah`, `penanggung_jawab`, `peminjam`, `no_telepon`, `status`) VALUES
+(3, 1, '2023-06-07 04:27:45', 100, 'Bambang', 'Udin', '081234567890', 'Kembali'),
+(6, 2, '2023-06-08 15:40:16', 100, 'Bambang', 'Hasan', '081234567890', 'Kembali'),
+(3, 3, '2023-06-08 16:14:05', 100, 'Bambang', 'Rudi', '081234567890', 'Kembali'),
+(7, 4, '2023-06-08 16:26:16', 100, 'Bambang', 'Udin', '081234567890', 'Kembali'),
+(3, 5, '2023-06-09 02:58:21', 100, 'Bambang', 'Denis', '081234567890', 'Kembali'),
+(3, 6, '2023-06-09 04:14:57', 100, 'Bambang', 'Udin', '081234567890', 'Dipinjam');
 
 -- --------------------------------------------------------
 
@@ -96,18 +117,18 @@ CREATE TABLE `stock` (
   `idbarang` int(11) NOT NULL,
   `namabarang` varchar(30) NOT NULL,
   `deskripsi` varchar(30) NOT NULL,
-  `stock` int(11) NOT NULL
+  `stock` int(11) NOT NULL,
+  `image` varchar(99) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `stock`
 --
 
-INSERT INTO `stock` (`idbarang`, `namabarang`, `deskripsi`, `stock`) VALUES
-(1, 'Lenovo EMS-537A', 'Mouse', 3),
-(2, 'Lenovo JME', 'Keyboard', 1),
-(3, 'Lenovo Monitor', 'Monitor', 25),
-(4, 'Viewsonic', 'Proyektor', 1);
+INSERT INTO `stock` (`idbarang`, `namabarang`, `deskripsi`, `stock`, `image`) VALUES
+(3, 'Lenovo Monitor', 'Monitor', 400, 'f0eabaa8fe65aedf1b67173ef2a10720.png'),
+(6, 'Keyboard Asus', 'Keyboard', 230, '9f430aa8a7115721f39231adaaabb3d6.png'),
+(7, 'Panasonic AC', 'Air Conditioner', 900, 'faa5cefdb9f25c24c11da2470fa32898.jpg');
 
 --
 -- Indexes for dumped tables
@@ -132,6 +153,12 @@ ALTER TABLE `masuk`
   ADD PRIMARY KEY (`idmasuk`);
 
 --
+-- Indeks untuk tabel `peminjaman`
+--
+ALTER TABLE `peminjaman`
+  ADD PRIMARY KEY (`idpeminjaman`);
+
+--
 -- Indeks untuk tabel `stock`
 --
 ALTER TABLE `stock`
@@ -145,25 +172,31 @@ ALTER TABLE `stock`
 -- AUTO_INCREMENT untuk tabel `keluar`
 --
 ALTER TABLE `keluar`
-  MODIFY `idkeluar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idkeluar` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `login`
 --
 ALTER TABLE `login`
-  MODIFY `iduser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `iduser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `masuk`
 --
 ALTER TABLE `masuk`
-  MODIFY `idmasuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idmasuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `peminjaman`
+--
+ALTER TABLE `peminjaman`
+  MODIFY `idpeminjaman` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
