@@ -64,7 +64,7 @@ if(isset($_POST['addnewbarang'])){
     //proses upload gambar
     if(in_array($ekstensi, $allowed_extension) === true){
         //validasi ukuran filenya
-        if($ukuran < 15000000){
+        if($ukuran < 15000000){// 15 MB
             move_uploaded_file($file_tmp, 'images/'.$image);
 
             $addtotable = mysqli_query($conn,"insert into stock (namabarang, deskripsi, stock, image) values('$namabarang','$deskripsi','$stock','$image')");
@@ -75,7 +75,7 @@ if(isset($_POST['addnewbarang'])){
                 header('location:index.php');
             }
         } else {
-            //file lebih dari 1.5 MB
+            //file lebih dari 15 MB
             echo '
             <script>
                 alert("Ukuran terlalu besar");
@@ -201,7 +201,7 @@ if(isset($_POST['hapusbarang'])){
 //Update Data Barang Masuk
 if (isset($_POST['updatebarangmasuk'])) {
     $idbrg = $_POST['idbrg'];
-    $idm = $_POST['idm'];
+    $idm = $_POST['idm']; //idmasuk
     $keterangan = $_POST['keterangan'];
     $jumlah = $_POST['jumlah'];
 
