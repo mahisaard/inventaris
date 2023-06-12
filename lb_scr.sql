@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Jun 2023 pada 09.27
+-- Waktu pembuatan: 12 Jun 2023 pada 03.25
 -- Versi server: 10.4.22-MariaDB
 -- Versi PHP: 8.1.2
 
@@ -75,8 +75,7 @@ CREATE TABLE `masuk` (
 --
 
 INSERT INTO `masuk` (`idmasuk`, `idbarang`, `jumlah`, `tanggal`, `keterangan`, `penerima`) VALUES
-(2, 7, 200, '2023-06-05 01:53:29', 'baru', 'bambang'),
-(3, 3, 500, '2023-06-05 02:02:37', 'baru', 'udin');
+(2, 11, 5, '2023-06-11 03:13:50', 'baru', 'bambang');
 
 -- --------------------------------------------------------
 
@@ -100,12 +99,8 @@ CREATE TABLE `peminjaman` (
 --
 
 INSERT INTO `peminjaman` (`idbarang`, `idpeminjaman`, `tanggal`, `jumlah`, `penanggung_jawab`, `peminjam`, `no_telepon`, `status`) VALUES
-(3, 1, '2023-06-07 04:27:45', 100, 'Bambang', 'Udin', '081234567890', 'Kembali'),
-(6, 2, '2023-06-08 15:40:16', 100, 'Bambang', 'Hasan', '081234567890', 'Kembali'),
-(3, 3, '2023-06-08 16:14:05', 100, 'Bambang', 'Rudi', '081234567890', 'Kembali'),
-(7, 4, '2023-06-08 16:26:16', 100, 'Bambang', 'Udin', '081234567890', 'Kembali'),
-(3, 5, '2023-06-09 02:58:21', 100, 'Bambang', 'Denis', '081234567890', 'Kembali'),
-(3, 6, '2023-06-09 04:14:57', 100, 'Bambang', 'Udin', '081234567890', 'Dipinjam');
+(10, 1, '2023-06-09 08:10:33', 2, 'Bambang', 'Udin', '081234567890', 'Kembali'),
+(3, 2, '2023-06-11 00:42:10', 1, 'Bambang', 'Hasan', '081234567890', 'Dipinjam');
 
 -- --------------------------------------------------------
 
@@ -126,9 +121,12 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`idbarang`, `namabarang`, `deskripsi`, `stock`, `image`) VALUES
-(3, 'Lenovo Monitor', 'Monitor', 400, 'f0eabaa8fe65aedf1b67173ef2a10720.png'),
-(6, 'Keyboard Asus', 'Keyboard', 230, '9f430aa8a7115721f39231adaaabb3d6.png'),
-(7, 'Panasonic AC', 'Air Conditioner', 900, 'faa5cefdb9f25c24c11da2470fa32898.jpg');
+(3, 'Lenovo Monitor', 'Monitor', 23, 'f0eabaa8fe65aedf1b67173ef2a10720.png'),
+(6, 'Keyboard Asus', 'Keyboard', 23, '9f430aa8a7115721f39231adaaabb3d6.png'),
+(7, 'Panasonic AC', 'Air Conditioner', 2, 'faa5cefdb9f25c24c11da2470fa32898.jpg'),
+(10, 'Mouse Lenovo', 'Lenovo', 26, 'cb71609872c21ca297de90a170a9a341.png'),
+(11, 'Kursi Donati', 'Kursi Kantor', 34, '7f1d5523f803d6f1c324339a174b9ca2.png'),
+(12, 'Proyektor ViewSonic', 'Proyektor', 1, 'ac919b698514645f6a3cf064519672c0.png');
 
 --
 -- Indexes for dumped tables
@@ -184,19 +182,19 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT untuk tabel `masuk`
 --
 ALTER TABLE `masuk`
-  MODIFY `idmasuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idmasuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `peminjaman`
 --
 ALTER TABLE `peminjaman`
-  MODIFY `idpeminjaman` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idpeminjaman` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idbarang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
